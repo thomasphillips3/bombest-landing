@@ -1,0 +1,47 @@
+# Deploys www.bombestaudio.com. Needs Settings > Pages > Source set to
+# "GitHub Actions". The config check runs first, so while the Stripe payment
+# link or the installer URL is still a placeholder nothing deploys and the
+# live site stays as it was.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Refuse to deploy with placeholder links
+        run: node scripts/check-config.mjs
+      - name: Build
+        run: node scripts/build.mjs --target www
+      - name: Check links
+        run: node scripts/build.mjs --target audio && node scripts/check-links.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/www
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
