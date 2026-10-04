@@ -1,92 +1,59 @@
-# Bombest Audio Landing Page
+# Bombest Audio site and store
 
-A minimalist, professional landing page for Bombest Audio at www.bom.best.
+The Bombest Audio home page and plugin store. One build, two places:
 
-## Deployment Instructions
+| Where | How it's served | Base path |
+|---|---|---|
+| https://www.bombestaudio.com | GitHub Pages, deployed by `.github/workflows/pages.yml` | `/` |
+| https://bom.best/audio | A Cloudflare Worker on the route `bom.best/audio*` (`cloudflare/`) | `/audio/` |
 
-### Step 1: Push to GitHub
+bom.best itself stays on S3/CloudFront behind Cloudflare. The Worker only answers `/audio` paths.
 
-1. Navigate to the website folder and initialize git repository (if not already done):
+## Layout
+
+| Path | What it is |
+|---|---|
+| `data/products.json` | Every product in the store. Add an entry here to add a product: the home page lists it and it gets its own page at `/<slug>/` |
+| `store.config.json` | The live links: `STRIPE_PAYMENT_LINK` and `INSTALLER_URL`. A product names which keys it uses (`buyLinkKey`, `installerKey`) |
+| `site/styles.css`, `site/images/` | Styles and images. The build fingerprints them into `assets/` so they can be cached forever |
+| `site/static/` | Copied as-is to both builds (favicon) |
+| `site/www-only/` | Copied only to the GitHub Pages build (CNAME, .nojekyll, the original logo URL) |
+| `scripts/build.mjs` | Builds `dist/www` and `dist/bom-best/audio`. No dependencies |
+| `scripts/check-config.mjs` | The deploy gate. Fails while any link is empty, not https, or still `REPLACE_ME` |
+| `scripts/check-links.mjs` | Checks every internal link in both builds resolves |
+| `cloudflare/` | The Worker, `wrangler.jsonc` and its own `package.json` |
+
+## Links that aren't set yet
+
+While a product's payment link or installer URL is a placeholder:
+
+- the build leaves that button off the page and says the store opens soon, so nobody clicks a dead link;
+- `scripts/check-config.mjs` exits 1, which stops the Pages workflow and the Worker deploy script.
+
+Fill both in `store.config.json`, run `node scripts/check-config.mjs`, and it says "Ready to deploy".
+
+## Local
+
 ```bash
-cd website
-git init
-git add index.html bombest-logo.png CNAME .nojekyll README.md
-git commit -m "Initial commit: Bombest Audio landing page"
+node scripts/build.mjs && node scripts/check-links.mjs
+python3 -m http.server 8080 --directory dist/www          # http://127.0.0.1:8080/
+cd cloudflare && npm install && npm run dev               # http://127.0.0.1:8787/audio/
 ```
 
-2. Create a new repository on GitHub (e.g., `bombest-landing`)
+## Deploying
 
-3. Push to GitHub:
+**GitHub Pages:** Settings > Pages > Source has to be "GitHub Actions" (it used to deploy straight from the root of `main`). After that, every push to `main` runs the config check, builds and deploys. If the check fails, the live site stays as it was.
+
+**Cloudflare Worker**, from the repo root, logged in to the Cloudflare account that has the bom.best zone:
+
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/bombest-landing.git
-git branch -M main
-git push -u origin main
+cd cloudflare && npm install && cd .. && npm run deploy:worker
 ```
 
-### Step 2: Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click **Settings** → **Pages** (in the left sidebar)
-3. Under **Source**, select **main** branch and **/ (root)** folder
-4. Click **Save**
-5. GitHub will build and deploy your site (takes 1-2 minutes)
-
-### Step 3: Configure DNS for bom.best Domain
-
-You need to configure your DNS settings with your domain registrar. Add the following DNS records:
-
-#### For Apex Domain (bom.best):
-Add these **A records** pointing to GitHub's servers:
-```
-185.199.108.153
-185.199.109.153
-185.199.110.153
-185.199.111.153
-```
-
-#### For www Subdomain (www.bom.best):
-Add a **CNAME record**:
-```
-www.bom.best → YOUR_USERNAME.github.io
-```
-
-#### Example DNS Configuration:
-| Type  | Name | Value                    | TTL  |
-|-------|------|--------------------------|------|
-| A     | @    | 185.199.108.153          | 3600 |
-| A     | @    | 185.199.109.153          | 3600 |
-| A     | @    | 185.199.110.153          | 3600 |
-| A     | @    | 185.199.111.153          | 3600 |
-| CNAME | www  | YOUR_USERNAME.github.io  | 3600 |
-
-### Step 4: Verify Custom Domain in GitHub
-
-1. Go back to **Settings** → **Pages** in your GitHub repository
-2. Under **Custom domain**, enter: `www.bom.best`
-3. Click **Save**
-4. Wait for DNS check to complete (may take a few minutes to 48 hours)
-5. Once verified, check **Enforce HTTPS** for secure connections
-
-### Step 5: Test Your Site
-
-Once DNS propagates (usually 5-30 minutes, can take up to 48 hours):
-- Visit https://www.bom.best
-- Verify the logo, text, and contact button work correctly
-- Test on mobile devices for responsiveness
-
-## Files
-
-- `index.html` - Main landing page
-- `bombest-logo.png` - Bombest Audio logo
-- `CNAME` - Custom domain configuration for GitHub Pages
-- `.nojekyll` - Tells GitHub Pages to serve files as-is (no Jekyll processing)
-- `README.md` - This file
+That runs the config check, builds the `/audio/` target and runs `wrangler deploy`.
 
 ## Contact
 
-Email: thomas@bom.best
+thomas@bom.best
 
-## License
-
-© 2025 Bombest LLC
-
+© Bombest LLC
