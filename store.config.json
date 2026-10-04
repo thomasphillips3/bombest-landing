@@ -1,0 +1,4 @@
+{
+  "STRIPE_PAYMENT_LINK": "https://buy.stripe.com/REPLACE_ME",
+  "INSTALLER_URL": "https://REPLACE_ME/Black-Bottom-Installer.pkg"
+}
