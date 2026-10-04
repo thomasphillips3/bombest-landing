@@ -1,0 +1,23 @@
+// bom.best/audio: the Bombest Audio store on the PM's Cloudflare account.
+// bom.best is proxied through Cloudflare to an S3/CloudFront site; this route
+// intercepts only /audio paths and leaves the rest of bom.best alone.
+//
+// Build the assets first (the deploy script does it, after the config check):
+//   npm run deploy:worker        (from the repo root)
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "bombest-audio-store",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "bom.best/audio*", "zone_name": "bom.best" }],
+  "assets": {
+    "directory": "../dist/bom-best",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": { "enabled": true }
+}

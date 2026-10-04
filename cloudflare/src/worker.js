@@ -1,0 +1,55 @@
+// bom.best/audio: serves the built store (dist/bom-best/audio) from Workers static
+// assets. The route is bom.best/audio*, so this Worker only ever sees /audio
+// paths; everything else on bom.best keeps going to the S3/CloudFront origin.
+//
+// The asset directory is dist/bom-best, so a request for /audio/black-bottom/
+// maps straight to dist/bom-best/audio/black-bottom/index.html. Unknown paths
+// get /audio/404.html with a 404 status (not_found_handling in wrangler.jsonc).
+
+const PREFIX = "/audio";
+
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "X-Frame-Options": "DENY",
+  "Content-Security-Policy":
+    "default-src 'none'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+};
+
+function cacheControl(pathname, status, contentType) {
+  if (status === 404) return "public, max-age=60";
+  if (status !== 200) return "no-store";
+  // Fingerprinted by the build: the name changes whenever the content does.
+  if (pathname.startsWith(`${PREFIX}/assets/`)) return "public, max-age=31536000, immutable";
+  // Pages revalidate every time, so a new deploy shows up at once (ETag keeps it cheap).
+  if (contentType.startsWith("text/html")) return "public, max-age=0, must-revalidate";
+  return "public, max-age=86400";
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const { pathname } = url;
+
+    // The route pattern also matches /audiobooks and the like. Those belong to
+    // the origin, so pass them through untouched.
+    if (pathname !== PREFIX && !pathname.startsWith(`${PREFIX}/`)) {
+      return fetch(request);
+    }
+
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
+    }
+
+    if (pathname === PREFIX) {
+      url.pathname = `${PREFIX}/`;
+      return Response.redirect(url.toString(), 301);
+    }
+
+    const res = await env.ASSETS.fetch(request);
+    const headers = new Headers(res.headers);
+    for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
+    headers.set("Cache-Control", cacheControl(pathname, res.status, headers.get("Content-Type") || ""));
+    return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
+  },
+};
