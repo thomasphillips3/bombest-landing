@@ -251,7 +251,7 @@ function storeHome(ctx, products) {
     <div class="wrap">
       <div>
         <p class="eyebrow rise">Bombest Audio plugins</p>
-        <h1 class="h1 rise d1"><span>Boutique plugins.</span><span>Built to hit.</span><span class="dim">Free to try.</span></h1>
+        <h1 class="h1 rise d1"><span>Boutique plugins</span><span>that look good</span><span class="dim">and put in work.</span></h1>
         <p class="lede rise d2">Plugins I build for funk, hip hop, rap and R&amp;B. Every one has a free trial, so put it on your own mix before you buy.</p>
         <div class="actions rise d3">
           <a class="btn" href="#plugins">See the plugins</a>
