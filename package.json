@@ -1,0 +1,17 @@
+{
+  "name": "bombest-landing",
+  "private": true,
+  "description": "www.bombestaudio.com and bom.best/audio: the Bombest Audio site and plugin store.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check-config.mjs",
+    "check:links": "node scripts/build.mjs && node scripts/check-links.mjs",
+    "preview": "node scripts/build.mjs --target www && python3 -m http.server 8080 --directory dist/www",
+    "deploy:worker": "npm --prefix cloudflare run deploy"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "UNLICENSED"
+}

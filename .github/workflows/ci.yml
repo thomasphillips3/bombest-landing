@@ -1,0 +1,30 @@
+# Runs on every pull request. "build" proves both targets build and every
+# internal link resolves. "deploy-ready" fails while the payment link or the
+# installer URL is a placeholder, so a PR that isn't ready to ship shows red.
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/build.mjs
+      - run: node scripts/check-links.mjs
+
+  deploy-ready:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-config.mjs

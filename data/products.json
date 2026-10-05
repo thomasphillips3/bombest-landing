@@ -1,0 +1,162 @@
+{
+  "products": [
+    {
+      "slug": "black-bottom",
+      "name": "Black Bottom",
+      "kind": "Stereo FET-style compressor",
+      "tagline": "Nasty. Beautiful.",
+      "price": 29,
+      "currency": "USD",
+      "buyLinkKey": "STRIPE_PAYMENT_LINK",
+      "installerKey": "INSTALLER_URL",
+      "summary": "A stereo FET-style compressor for drums, bass and vocals. Fast, punchy, and it gets dirty when you push it.",
+      "description": "Black Bottom is a stereo FET-style compressor from Bombest Audio. AU, VST3 and AAX for macOS, Apple Silicon and Intel. $29, with a free trial.",
+      "image": {
+        "src": "images/black-bottom-720.jpg",
+        "src2x": "images/black-bottom-1440.jpg",
+        "width": 720,
+        "height": 366,
+        "alt": "The Black Bottom plugin window: INPUT and OUTPUT knobs either side of a gain reduction meter, with ATTACK, RELEASE, RATIO buttons 4, 8, 12, 20 and ALL, and MIX along the bottom."
+      },
+      "intro": [
+        "Black Bottom is a stereo FET-style compressor. I made it for the music I work on: funk, hip hop, rap and R&B. Reach for it when you want energy, punch and character, not invisible level control.",
+        "The low end is where it lives. Push INPUT and the bottom gets thick before it gets loud. The detector is high-passed at 90 Hz, so the kick and the bass don't yank the whole mix down. Work it hard and a little hiss breathes with the compression, the way a hard-worked hardware unit does.",
+        "Flip CLEAN for the classic FET sound. Same knobs, same ratios, no added color and no hiss."
+      ],
+      "controls": [
+        {
+          "name": "Input",
+          "range": "-24 to +36 dB",
+          "text": "How hard you drive it. More input, more compression, more grit."
+        },
+        {
+          "name": "Output",
+          "range": "-24 to +24 dB",
+          "text": "Make-up gain after the compressor."
+        },
+        {
+          "name": "Attack",
+          "range": "1 to 7",
+          "text": "1 is slowest (800 µs) and lets the hit through. 7 is fastest (20 µs) and grabs the front of it."
+        },
+        {
+          "name": "Release",
+          "range": "1 to 7",
+          "text": "1 is slowest (1.1 s), 7 is fastest (50 ms). It slows down the longer it's been working, like the hardware."
+        },
+        {
+          "name": "Ratio",
+          "range": "4 / 8 / 12 / 20 / ALL",
+          "text": "ALL is every ratio button in at once: harder, grabbier, dirtier."
+        },
+        {
+          "name": "Mix",
+          "range": "0 to 100%",
+          "text": "Blend the dry signal back in for parallel compression, right on the channel. At 0% you get your dry signal, untouched."
+        },
+        {
+          "name": "Clean",
+          "range": "Switch",
+          "text": "The same compressor without the Black Bottom color: no low-end grit, no hiss."
+        },
+        {
+          "name": "Meter",
+          "range": "GR dB",
+          "text": "The needle and the readout show gain reduction."
+        }
+      ],
+      "presetsIntro": "13 presets, dialed in on real dry drums, bass and vocal and level-matched, so switching presets changes the character, not the volume.",
+      "presets": [
+        {
+          "category": "Start here",
+          "names": [
+            "Default"
+          ]
+        },
+        {
+          "category": "Drums",
+          "names": [
+            "Glue",
+            "Punch",
+            "Black Bottom",
+            "Smash Parallel",
+            "Crushed"
+          ]
+        },
+        {
+          "category": "Bass",
+          "names": [
+            "Steady",
+            "Growl",
+            "Thick Parallel"
+          ]
+        },
+        {
+          "category": "Vocal",
+          "names": [
+            "Up Front",
+            "Aggressive",
+            "Parallel Grit",
+            "Clean Leveler"
+          ]
+        }
+      ],
+      "seats": 3,
+      "specs": [
+        [
+          "Type",
+          "Stereo FET-style compressor"
+        ],
+        [
+          "Formats",
+          "AU, VST3, AAX"
+        ],
+        [
+          "System",
+          "macOS, universal (Apple Silicon and Intel)"
+        ],
+        [
+          "Channels",
+          "Mono or stereo, linked in stereo"
+        ],
+        [
+          "Latency",
+          "Zero, at every setting"
+        ],
+        [
+          "License",
+          "One license, 3 computers. No iLok."
+        ],
+        [
+          "Version",
+          "0.9.0 beta"
+        ],
+        [
+          "Price",
+          "$29"
+        ]
+      ],
+      "stage": "Beta",
+      "version": "0.9.0",
+      "cardSummary": "Fast, punchy, and it gets dirty when you push it. The low end gets thick before it gets loud, and CLEAN gives you the classic FET sound with no added color.",
+      "cardSpecs": [
+        [
+          "Formats",
+          "AU, VST3, AAX"
+        ],
+        [
+          "System",
+          "macOS, universal"
+        ],
+        [
+          "License",
+          "3 computers, no iLok"
+        ],
+        [
+          "Presets",
+          "13, level-matched"
+        ]
+      ]
+    }
+  ]
+}

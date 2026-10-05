@@ -1,0 +1,14 @@
+{
+  "name": "bombest-audio-store-worker",
+  "private": true,
+  "description": "Serves the Bombest Audio store at bom.best/audio from Workers static assets.",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../scripts/build.mjs --target audio && wrangler dev --local --port 8787",
+    "deploy": "node ../scripts/check-config.mjs && node ../scripts/build.mjs --target audio && wrangler deploy"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "wrangler": "^4.137.0"
+  }
+}
