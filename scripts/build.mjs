@@ -286,6 +286,7 @@ function buyBox(ctx, p) {
   const buttons = [];
   if (buy) buttons.push(`<a class="btn" href="${esc(buy)}" rel="noopener">Buy for ${money(p)}</a>`);
   if (trial) buttons.push(`<a class="btn btn-ghost" href="${esc(trial)}">Download free trial</a>`);
+  const codeNote = buy && p.stage ? `<p class="fine">Beta tester? Click "Add code" at checkout and enter the code I sent you.</p>` : "";
 
   let soon = "";
   if (!buy && !trial) {
@@ -296,7 +297,7 @@ function buyBox(ctx, p) {
     soon = "The free trial download is coming soon.";
   }
 
-  return [buttons.length ? `<div class="actions">${buttons.join("")}</div>` : "", soon ? `<p class="soon">${soon}</p>` : ""]
+  return [buttons.length ? `<div class="actions">${buttons.join("")}</div>` : "", codeNote, soon ? `<p class="soon">${soon}</p>` : ""]
     .filter(Boolean)
     .join("\n          ");
 }

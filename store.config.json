@@ -1,5 +1,5 @@
 {
-  "STORE_OPEN": false,
+  "STORE_OPEN": true,
   "STRIPE_PAYMENT_LINK": "https://buy.stripe.com/5kQ9AU2Gq5zncLT85fcMM00",
-  "INSTALLER_URL": "https://REPLACE_ME/Black-Bottom-Installer.pkg"
+  "INSTALLER_URL": "https://bombest-releases.s3.amazonaws.com/black-bottom/0.9.0/Black-Bottom-Installer-0.9.0-Beta.pkg"
 }
