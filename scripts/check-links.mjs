@@ -11,6 +11,8 @@ import { ROOT } from "./lib/store.mjs";
 const TARGETS = [
   { name: "www", base: "/", dir: "dist/www" },
   { name: "audio", base: "/audio/", dir: "dist/bom-best/audio" },
+  // The bom.best home page (dist/bom-best/index.html) links into /audio/.
+  { name: "bom.best", base: "/", dir: "dist/bom-best" },
 ];
 
 let bad = 0;

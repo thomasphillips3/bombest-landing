@@ -3,3 +3,4 @@ node_modules/
 cloudflare/node_modules/
 cloudflare/.wrangler/
 .DS_Store
+.claude/

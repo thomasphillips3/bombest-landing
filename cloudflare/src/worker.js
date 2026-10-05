@@ -1,10 +1,13 @@
-// bom.best/audio: serves the built store (dist/bom-best/audio) from Workers static
-// assets. The route is bom.best/audio*, so this Worker only ever sees /audio
-// paths; everything else on bom.best keeps going to the S3/CloudFront origin.
+// bom.best and bom.best/audio: serves the Bombest Audio home page at the root
+// (dist/bom-best/index.html) and the store under /audio (dist/bom-best/audio)
+// from Workers static assets. The routes are bom.best/ (the root alone) and
+// bom.best/audio*; everything else on bom.best, /beats included, keeps going to
+// the S3/CloudFront origin.
 //
 // The asset directory is dist/bom-best, so a request for /audio/black-bottom/
-// maps straight to dist/bom-best/audio/black-bottom/index.html. Unknown paths
-// get /audio/404.html with a 404 status (not_found_handling in wrangler.jsonc).
+// maps straight to dist/bom-best/audio/black-bottom/index.html. Unknown /audio
+// paths get /audio/404.html with a 404 status (not_found_handling in
+// wrangler.jsonc).
 
 const PREFIX = "/audio";
 
@@ -31,9 +34,11 @@ export default {
     const url = new URL(request.url);
     const { pathname } = url;
 
-    // The route pattern also matches /audiobooks and the like. Those belong to
-    // the origin, so pass them through untouched.
-    if (pathname !== PREFIX && !pathname.startsWith(`${PREFIX}/`)) {
+    // The /audio* route pattern also matches /audiobooks and the like. Those,
+    // and anything else that isn't the root, belong to the origin, so pass them
+    // through untouched.
+    const isHome = pathname === "/";
+    if (!isHome && pathname !== PREFIX && !pathname.startsWith(`${PREFIX}/`)) {
       return fetch(request);
     }
 
