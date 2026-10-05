@@ -4,8 +4,8 @@ The Bombest Audio home page and plugin store:
 
 | Where | What | How it's served | Base path |
 |---|---|---|---|
-| https://bom.best | The Bombest Audio home page | The Cloudflare Worker, on the route `bom.best/` (the root alone) | `/` |
-| https://bom.best/audio | The store | The same Worker, on the route `bom.best/audio*` (`cloudflare/`) | `/audio/` |
+| https://bom.best | The Bombest Audio home page | The Cloudflare Worker, on the route `bom.best/*` | `/` |
+| https://bom.best/audio | The store | The same Worker (`cloudflare/`) | `/audio/` |
 | https://www.bombestaudio.com | The store | GitHub Pages, deployed by `.github/workflows/pages.yml` | `/` |
 
 The rest of bom.best, `/beats` included, stays on S3/CloudFront behind Cloudflare. The Worker answers only the root and `/audio` paths and passes everything else through.

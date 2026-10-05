@@ -1,8 +1,8 @@
 // bom.best and bom.best/audio: serves the Bombest Audio home page at the root
 // (dist/bom-best/index.html) and the store under /audio (dist/bom-best/audio)
-// from Workers static assets. The routes are bom.best/ (the root alone) and
-// bom.best/audio*; everything else on bom.best, /beats included, keeps going to
-// the S3/CloudFront origin.
+// from Workers static assets. The route is bom.best/*, so the Worker sees every
+// bom.best request; everything except the root and /audio, /beats included, is
+// passed straight through to the S3/CloudFront origin.
 //
 // The asset directory is dist/bom-best, so a request for /audio/black-bottom/
 // maps straight to dist/bom-best/audio/black-bottom/index.html. Unknown /audio
@@ -34,9 +34,8 @@ export default {
     const url = new URL(request.url);
     const { pathname } = url;
 
-    // The /audio* route pattern also matches /audiobooks and the like. Those,
-    // and anything else that isn't the root, belong to the origin, so pass them
-    // through untouched.
+    // Anything that isn't the root or /audio (/beats, /audiobooks and the like)
+    // belongs to the origin, so pass it through untouched.
     const isHome = pathname === "/";
     if (!isHome && pathname !== PREFIX && !pathname.startsWith(`${PREFIX}/`)) {
       return fetch(request);
