@@ -251,7 +251,7 @@ function storeHome(ctx, products) {
     <div class="wrap">
       <div>
         <p class="eyebrow rise">Bombest Audio plugins</p>
-        <h1 class="h1 rise d1"><span>Boutique plugins.</span><span>Built to hit.</span><span class="dim">No iLok.</span></h1>
+        <h1 class="h1 rise d1"><span>Boutique plugins.</span><span>Built to hit.</span><span class="dim">Free to try.</span></h1>
         <p class="lede rise d2">Plugins I build for funk, hip hop, rap and R&amp;B. Every one has a free trial, so put it on your own mix before you buy.</p>
         <div class="actions rise d3">
           <a class="btn" href="#plugins">See the plugins</a>
@@ -272,7 +272,7 @@ ${unit("01", "Plugins", products.map((p) => productCard(ctx, p)).join("\n"))}
   return layout({
     ctx,
     title: "Plugins | Bombest Audio",
-    description: "Boutique audio plugins from Bombest Audio. Every one has a free trial. No iLok.",
+    description: "Boutique audio plugins from Bombest Audio. Every one has a free trial.",
     canonical: SITE_URL,
     image: ctx.assets[products[0]?.image.src2x],
     header: storeHeader(ctx),
@@ -346,7 +346,7 @@ ${section(
   "license",
   "04",
   "How the license works",
-  `          <p class="section-lede">No iLok. No serial keys to copy and paste.</p>
+  `          <p class="section-lede">No serial keys to copy and paste.</p>
           <ol class="steps">
             <li><strong>Try it.</strong>Download the free trial and install it. ${name} runs as a demo: every control works, but the audio drops out for about a second every 30 seconds.</li>
             <li><strong>Buy it and it unlocks.</strong>Buy from the Unlock button inside the plugin and it unlocks by itself. Buy here, then open ${name}, click Unlock and sign in with the email you paid with.</li>
