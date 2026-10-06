@@ -285,8 +285,11 @@ function buyBox(ctx, p) {
   const trial = ctx.open ? linkFor(ctx.config, p.installerKey) : null;
   const buttons = [];
   if (buy) buttons.push(`<a class="btn" href="${esc(buy)}" rel="noopener">Buy for ${money(p)}</a>`);
-  if (trial) buttons.push(`<a class="btn btn-ghost" href="${esc(trial)}">Download free trial</a>`);
+  if (trial) buttons.push(`<a class="btn btn-ghost" href="${ctx.storeBase}${p.slug}/download/">Download</a>`);
   const codeNote = buy && p.stage ? `<p class="fine">Beta tester? Click "Add code" at checkout and enter the code I sent you.</p>` : "";
+  const dlNote = trial
+    ? `<p class="fine">One download for everyone. It plays as a free trial until you unlock it: open ${esc(p.name)}, click Unlock and sign in with the email you bought with.</p>`
+    : "";
 
   let soon = "";
   if (!buy && !trial) {
@@ -297,7 +300,7 @@ function buyBox(ctx, p) {
     soon = "The free trial download is coming soon.";
   }
 
-  return [buttons.length ? `<div class="actions">${buttons.join("")}</div>` : "", codeNote, soon ? `<p class="soon">${soon}</p>` : ""]
+  return [buttons.length ? `<div class="actions">${buttons.join("")}</div>` : "", dlNote, codeNote, soon ? `<p class="soon">${soon}</p>` : ""]
     .filter(Boolean)
     .join("\n          ");
 }
@@ -382,6 +385,37 @@ ${section(
   });
 }
 
+// A stable download address per product, /<slug>/download/, that always
+// points at the current installer. The licence email and the thank-you page
+// link here, so a new version never leaves an old link behind.
+function downloadPage(ctx, p) {
+  const url = linkFor(ctx.config, p.installerKey);
+  const body = `  <main class="lost">
+    <h1>Downloading ${esc(p.name)}</h1>
+    <p>Your download should start by itself. If it doesn't, use the button.</p>
+    <a class="btn" href="${esc(url)}">Download ${esc(p.name)}${p.stage ? ` ${esc(stageLabel(p))}` : ""}</a>
+    <p class="fine">Quit your DAW, then double-click the installer. Open ${esc(p.name)}, click Unlock and sign in with the email you bought with. Haven't bought it? It plays as a free trial until you do.</p>
+  </main>`;
+  return layout({ ctx, title: `Download ${p.name} | Bombest Audio`, description: `Download ${p.name}.`, header: storeHeader(ctx), body, noindex: true })
+    .replace("</head>", `  <meta http-equiv="refresh" content="1; url=${esc(url)}" />\n</head>`);
+}
+
+// Where checkout sends a buyer after paying.
+function thanksPage(ctx, p) {
+  const body = `  <main class="lost">
+    <h1>You're in.</h1>
+    <p>Thanks for buying ${esc(p.name)}. Three steps:</p>
+    <ol class="steps">
+      <li><strong>Download it.</strong>The installer is the same one as the trial.</li>
+      <li><strong>Install it.</strong>Quit your DAW, double-click the installer, then open ${esc(p.name)} on a track.</li>
+      <li><strong>Unlock it.</strong>Click Unlock and sign in with the email you used at checkout. It unlocks by itself.</li>
+    </ol>
+    <a class="btn" href="${ctx.storeBase}${p.slug}/download/">Download ${esc(p.name)}</a>
+    <p class="fine">Your licence email is on its way too, with the same download link. Questions? <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></p>
+  </main>`;
+  return layout({ ctx, title: `Thanks for buying ${p.name} | Bombest Audio`, description: `Download and unlock ${p.name}.`, header: storeHeader(ctx), body, noindex: true });
+}
+
 function notFoundPage(ctx) {
   const body = `  <main class="lost">
     <h1>Nothing here</h1>
@@ -419,7 +453,11 @@ function build(targetName) {
   const open = config.STORE_OPEN === true;
   const ctx = { base: target.base, storeBase: target.base, assets, config, open };
   write(path.join(out, "index.html"), storeHome(ctx, products));
-  for (const p of products) write(path.join(out, p.slug, "index.html"), productPage(ctx, p));
+  for (const p of products) {
+    write(path.join(out, p.slug, "index.html"), productPage(ctx, p));
+    write(path.join(out, p.slug, "thanks", "index.html"), thanksPage(ctx, p));
+    if (linkFor(config, p.installerKey)) write(path.join(out, p.slug, "download", "index.html"), downloadPage(ctx, p));
+  }
   write(path.join(out, "404.html"), notFoundPage(ctx));
 
   // The bom.best home page sits one level up, at dist/bom-best/index.html, and
